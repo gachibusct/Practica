@@ -1,0 +1,29 @@
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+using namespace std;
+int main() {
+setlocale(0, "");
+	float a, x, y, z;
+	cout << "Введите 2 числа ";
+	cin >> a >> x;
+	if (a<=x) {
+		y = a+log(x+a);
+	} else {
+		y = sqrt(sin(a*x));
+	}
+	if (a>y) {
+		z = y/(a-x);
+	} else {
+		if (a==y) {
+			z =y/(a-x)+(a+x)/(y*y);
+		} else {
+			z =tan(a*x)+cos(2*a*y);
+		}
+	}
+    if (isnan(y)|| isnan(z))
+    cout << "Ошибка" << endl;
+    else
+	cout << " a = " << a << " x = " << x << " y = " << y << " z = " << z << endl;
+	return 0;
+  }
