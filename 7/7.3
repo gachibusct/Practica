@@ -1,0 +1,55 @@
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+class Transport {
+protected:int weight;
+	int speed;
+	string name;
+public:Transport() {
+	cout << "Введи скорость и массу транспорта:" << endl;
+	cin >> weight >> speed;
+	cout << "Введите название транспорта" << endl;
+	cin >> name;
+}
+	   virtual  void showAdvantages() = 0;
+};
+class Bycicle:public Transport {
+public:
+	Bycicle() :Transport() {  }
+	void showAdvantages() {
+		cout << "Велик:" << name << ' ' << speed << "km/h " << weight << "кг"<<endl;
+	}
+};
+class Bus :public Transport {
+public:
+	Bus() :Transport() {}
+	void showAdvantages() {
+		cout << "Автобус:" << name << ' ' << speed << "km/h " << weight << "кг" << endl;
+	}
+};
+class Car :public Transport {
+public:
+	Car() :Transport() { }
+	void showAdvantages() {
+		cout << "Машина:" << name << ' ' << speed << "km/h " << weight << "кг" << endl;
+	}
+};
+int main()
+{
+    setlocale(0, "");
+	string b;
+	cout << "Выберите нужный транспорт(Автобус, машина,велик): " << endl;
+	cin >> b;
+	if(b=="Автобус"){ Bus a; a.showAdvantages();
+	}
+	else if (b == "Машина") {
+		Car a; a.showAdvantages();
+	}
+	else if (b == "Велик") {
+		Bycicle a; a.showAdvantages();
+	}
+    return 0;
+
+}
