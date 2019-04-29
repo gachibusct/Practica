@@ -1,0 +1,25 @@
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+using namespace std;
+int main() {
+	float a, b, c, d;
+	cout << "Введите 2 числа ";
+	cin >> a >> b;
+	if (a <= b) {
+		c = (a-b)*(a+b)/((a+b)*(a*a-a *b+b*b));
+	} else {
+		c = a + pow(log(b), 2);
+	}
+	if (c == b) {
+		d = (2*c+sqrt(c*c-a))/(2*b-sqrt(a*a-c));
+	} else {
+		if (c < b) {
+			d = sin(c)*sin(c)+1/tan(a-b);
+		} else {
+			d = cbrt(c*sin(a))+1/sqrt(c*cos(b));
+		}
+	}
+	cout << " a = " << a << " b = " << b << " c = " << c << " d = " << d << endl;
+	return 0;
+}
