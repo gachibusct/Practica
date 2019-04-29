@@ -1,0 +1,108 @@
+#include "pch.h"
+#include <iostream>
+using namespace std;
+class Screen {
+protected:
+double screenSize;
+public:
+Screen(double size) { this->screenSize = size; }
+virtual void changeScreen(double size) = 0;
+};
+class Keyboard {
+protected:
+int buttons;
+public:
+Keyboard(int buttons) { this->buttons = buttons; }
+virtual void changeKeyboard(int buttons) = 0;
+};
+class Computer : public Screen, Keyboard {
+public:
+Computer(double screenSize, int buttons) : Screen(screenSize), Keyboard(buttons) {};
+void changeScreen(double size) {
+cout << "Экран" << screenSize <<
+"Изменен" << size << "размер" << endl;
+screenSize = size;
+}
+void changeKeyboard(int buttons) {
+cout << "Клавиаутра и" << this->buttons << "Кнопки" <<
+"Изменен" << buttons << "Кнопки" << endl;
+this->buttons = buttons;
+}
+~Computer() {}
+};
+class Notebook : public Screen, Keyboard {
+public:
+Notebook(double screenSize, int buttons) : Screen(screenSize), Keyboard(buttons) {};
+void changeScreen(double size) {
+if (screenSize == size) {
+cout << "Экран Изменен." << endl;
+}
+else {
+cout << "Экран не изменен." << endl;
+}
+}
+void changeKeyboard(int buttons) {
+if (this->buttons == buttons) {
+cout << "Клавиатура изменена." << endl;
+}
+else {
+cout << "Клавиаутар не была изменена." << endl;
+}
+}
+~Notebook() {}
+};
+class Phone : public Screen, Keyboard {
+public:
+Phone(double screenSize, int buttons) : Screen(screenSize), Keyboard(buttons) {};
+void changeScreen(double size) {
+if (screenSize == size) {
+cout << "Экран телефона изменен" << endl;
+}
+else {
+cout << "Экран телефона не изменен" << endl;
+}
+}
+void changeKeyboard(int buttons) {
+cout << "Клавиатура не может быть изменена" << endl;
+}
+~Phone() {}
+};
+int main() {
+    setlocale(0, "");
+int z=1;
+do {
+cout << "Какой предмет вы возьмете 1-Телефон 2-ноутбук 3-компьютер" << endl;
+int x, y;
+cin >> z;
+switch (z)
+{
+case 1: {cout << "Введите размер экрана и количество кнопок " << endl;
+cin >> x >> y;
+Phone a(x, y);
+cout << "На сколкьо вы хротите изменить размер экрана и кол-во кнопок " << endl;
+cin >> x >> y;
+a.changeKeyboard(x);
+a.changeScreen(y);
+break; }
+case 2: {cout << "Введите размер экрана и количество кнопок " << endl;
+cin >> x >> y;
+Notebook b(x, y);
+cout << "На сколкьо вы хротите изменить размер экрана и кол-во кнопок " << endl;
+cin >> x >> y;
+b.changeKeyboard(x);
+b.changeScreen(y);
+break; }
+case 3: {cout << "Введите размер экрана и количество кнопок " << endl;
+cin >> x >> y;
+Computer c(x, y);
+cout << "На сколкьо вы хротите изменить размер экрана и кол-во кнопок " << endl;
+cin >> x >> y;
+c.changeKeyboard(x);
+c.changeScreen(y);
+break; }
+default:
+break;
+}
+} while (z != 0);
+return 0;
+}
