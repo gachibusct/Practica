@@ -1,0 +1,16 @@
+#include "pch.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+int main() {
+setlocale(0, "");
+   ofstream file;
+    string a;
+    cout << "Введите любой текст с клавиаутры,который будет записан в файл "<< endl;
+    getline(cin,a);
+    file.open("myfilework.txt", ios_base::trunc);
+    file << a;
+    file.close();
+    return 0;
+}
