@@ -1,0 +1,54 @@
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+using namespace std;
+class Shape{
+protected:
+	int a1, a2, a3, a4;
+public:
+	Shape() {
+		cout << "Введите длины сторон " << endl;
+		cin >> a1;
+		cin >> a2;
+		cin >> a3;
+		cin >> a4;
+	} 
+	virtual void square() = 0;
+};
+class Romb:public Shape {
+public:
+	double sinus;
+	Romb() :Shape() {
+		cout << "Введите малый угол: " << endl;
+		cin >> sinus;
+	}
+	void square() {
+		cout <<  a1*a1*sin(sinus)<<endl;;
+	}
+};
+class Rectangle :public Shape {
+public:
+	Rectangle() :Shape() {
+	}
+	void square() {
+		cout<< a1*a3<<endl;
+	}
+};
+class Figure {
+public:
+	void square(Shape *shape) {
+		cout << "Площадь равна ";
+		shape->square();
+	}
+};
+int main()
+{
+    setlocale(0, "");
+	Rectangle c;
+	Romb b;
+	Figure a;
+	a.square(&b);
+	a.square(&c);
+    return 0;
+
+}
