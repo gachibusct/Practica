@@ -1,0 +1,268 @@
+
+#include "pch.h"
+#include <iostream>
+#include <Windows.h>
+#include <cmath>
+#include <conio.h>
+#include <ctime>
+#include <vector>
+#define M_PI 3.14159265
+using namespace std;
+HANDLE Console = GetStdHandle(STD_OUTPUT_HANDLE);//Управление смтрелочками
+const int g = 9.81;
+bool lose = false;
+vector<COORD> b1(6);
+vector<COORD> b2(6);
+void napr(COORD cord, double alpha, int v, double vr, bool ka, bool num) {
+	double start = clock(), end = clock(), n = 0.1;
+	COORD prosh = { cord.X,30 };
+	COORD pervii = prosh;
+	if (vr == 15) {
+		for (double t = 0; t < vr;) {
+			SetConsoleCursorPosition(Console, pervii);
+			t = (end - start) / CLOCKS_PER_SEC;
+			end = clock();
+			if (num == 0)cord.X = (v * cos(alpha)*t) + 25;
+			else cord.X = (v * cos(alpha)*t) + 145;
+			cord.Y = -(-g * t*t / 2 + v * sin(alpha)*t) + 30;
+			if (t > n) {
+				if (cord.Y >= 34)break;
+				if (cord.Y >= 0 && cord.X >= 0 && cord.X <= 170) {
+					SetConsoleCursorPosition(Console, cord);
+					if (ka == 1) {
+						cout << "*";
+						SetConsoleCursorPosition(Console, prosh);
+						cout << " ";
+						prosh = cord;
+					}
+				}
+				n += 0.1;
+			}
+			for (int i = 0; i < 6; i++) {//41-44 проверка попадания по другому игроку или по себе
+				if ((b1[i].X == cord.X&&b1[i].Y == cord.Y) || (b2[i].X == cord.X&&b2[i].Y == cord.Y))lose = true;
+			}
+			if (lose)break;
+		}
+	}
+	else {
+		for (double t = 0; t < vr; t += 0.1) {
+			if (num == 0)cord.X = (v * cos(alpha)*t) + 25;
+			else cord.X = (v * cos(alpha)*t) + 145;
+			cord.Y = -(-g * t*t / 2 + v * sin(alpha)*t) + 30;
+			if (cord.Y >= 34)break;
+			if (cord.Y >= 0 && cord.X >= 0 && cord.X <= 170) {
+				SetConsoleCursorPosition(Console, cord);
+				if (ka == 1)cout << "*";
+				else cout << " ";
+			}
+		}
+	}
+}
+class bali {
+public:
+	char knop;
+	int lel;
+	double alpha;
+	int v;
+	bool ka;
+	COORD cord;
+	virtual vector<COORD> risbalist(vector<COORD>b1) = 0;
+	virtual void xod() = 0;
+	virtual void param() = 0;
+};
+class balist_1 :public bali {
+public:
+	void param() {
+		napr(cord, alpha, v, 0.5, 0, 0);
+		knop = 1;
+		ka = 1;
+	}
+	vector<COORD> risbalist(vector <COORD> b1) {
+		for (int i = 0; i < 3; i++) {
+			b1[i] = this->cord;
+			SetConsoleCursorPosition(Console, cord);
+			cout << "0";
+			cord.Y = cord.Y + 1;
+			b1[i + 3] = this->cord;
+			SetConsoleCursorPosition(Console, cord);
+			cout << "0";
+			cord.X = cord.X - 1;
+			cord.Y = cord.Y - 1;
+		}
+		return b1;
+	}
+	void xod() {
+		v = 20;
+		lel = 10;
+		knop = 1;
+		alpha = M_PI / lel;
+		ka = 0;
+		cord = { 25,30 };
+		while (knop != 32) {
+			knop = _getch();
+			switch (knop) {
+			case 80:
+				if (lel < 20) {
+					param();
+					lel++;
+				}
+				break;
+			case 72:
+				if (lel > 2) {
+					param();
+					lel--;
+				}
+				break;
+			case 75:
+				if (v > 7) {
+					param();
+					v--;
+				}
+				break;
+			case 77:
+				if (v < 50) {
+					param();
+					v++;
+				}
+				break;
+			case 32:
+				napr(cord, alpha, v, 0.5, 0, 0);
+				napr(cord, alpha, v, 15, 1, 0);
+				SetConsoleCursorPosition(Console, { 50,35 });
+				if (!lose) {
+					cout << "нажмите пробел чтобы перейти к другому игроку" << endl;
+					knop = _getch();
+					while (knop != 32) {
+						knop = _getch();
+					}
+					SetConsoleCursorPosition(Console, { 50,35 });
+					cout << "                                               " << endl;
+					napr(cord, alpha, v, 14.99, 0, 0);
+				}
+				break;
+			}
+			alpha = M_PI / lel;
+			if (ka == 1) {
+				napr(cord, alpha, v, 0.5, 1, 0);
+				ka = 0;
+			}
+		}
+	}
+};
+class balist_2 :public bali {
+public:
+	void param() {
+		napr(cord, alpha, v, 0.5, 0, 1);
+		knop = 1;
+		ka = 1;
+	}
+	vector<COORD> risbalist(vector <COORD> b1) {
+		for (int i = 0; i < 3; i++) {
+			b1[i] = this->cord;
+			SetConsoleCursorPosition(Console, cord);
+			cout << "0";
+			cord.Y = cord.Y + 1;
+			b1[i + 3] = this->cord;
+			SetConsoleCursorPosition(Console, cord);
+			cout << "0";
+			cord.X = cord.X - 1;
+			cord.Y = cord.Y - 1;
+		}
+		return b1;
+	}
+	void xod() {
+		v = 20;
+		knop = 0;
+		lel = 10;//на что делаить пи на угол который должен быть для понятия компьютером
+		alpha = M_PI - (M_PI / lel);
+		ka = 0;
+		cord = { 145,30 };
+		while (knop != 32) {
+			knop = _getch();
+			switch (knop) {
+			case 80:
+				if (lel < 20) {
+					param();
+					lel++;
+				}
+				break;
+			case 72:
+				if (lel > 2) {
+					param();
+					lel--;
+				}
+				break;
+			case 75:
+				if (v < 50) {
+					param();
+					v++;
+				}
+				break;
+			case 77:
+				if (v > 7) {
+					param();
+					v--;
+				}
+				break;
+			case 32:
+				napr(cord, alpha, v, 0.5, 0, 1);
+				napr(cord, alpha, v, 15, 1, 1);
+				if (!lose) {
+					SetConsoleCursorPosition(Console, { 60,35 });
+					cout << "нажмите пробел чтобы перейти к другому игроку" << endl;
+					knop = _getch();
+					while (knop != 32) {
+						knop = _getch();
+					}
+					SetConsoleCursorPosition(Console, { 60,35 });
+					cout << "                                               " << endl;
+					napr(cord, alpha, v, 14.99, 0, 1);
+				}
+				break;
+			}
+			alpha = M_PI - (M_PI / lel);
+			if (ka == 1) {
+				napr(cord, alpha, v, 0.5, 1, 1);
+				ka = 0;
+			}
+		}
+	}
+};
+int main()
+{
+	HWND hwnd = GetForegroundWindow();
+	ShowWindow(hwnd, SW_MAXIMIZE);
+	setlocale(0, "rus");
+	COORD stroch = { 35,10 };
+	SetConsoleCursorPosition(Console, stroch);
+	cout << "игра баллиста";
+	SetConsoleCursorPosition(Console, { stroch.X,stroch.Y + 1 });
+	cout << "правила:пробел-пуск камня,<вверх-вниз>-изменения угла,<влево-вправо>-изменение скорости";
+	SetConsoleCursorPosition(Console, { stroch.X,stroch.Y + 2 });
+	cout << "чтобы начать нажмите любую кнопку";
+	_getch();
+	system("cls");
+	balist_1 pervii;
+	balist_2 vtoroi;
+	bool ka = 1;
+	pervii.cord = { 26,31 };
+	b1 = pervii.risbalist(b1);
+	vtoroi.cord = { 146,31 };
+	b2 = vtoroi.risbalist(b2);
+	while (true) {
+		pervii.xod();
+		if (lose == true) {
+			SetConsoleCursorPosition(Console, { 55,35 });
+			if (pervii.lel > 2)cout << "выйграл 1-й игрок";
+			else cout << "выйграл 2-й игрок";
+			break;
+		}
+		vtoroi.xod();
+		if (lose == true) {
+			SetConsoleCursorPosition(Console, { 55,35 });
+			if (pervii.lel > 2)cout << "выйграл 2-й игрок";
+			else cout << "выйграл 1-й игрок";
+			break;
+		}
+	}
+}
